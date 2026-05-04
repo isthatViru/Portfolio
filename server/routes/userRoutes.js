@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { addUser, getuser,updateUser } = require("../controllers/userControllers");
+const { addUser, getuser,updateUser,deleteUser } = require("../controllers/userControllers");
 const upload = require("../middleware/upload");
 
 // Get users
@@ -25,5 +25,10 @@ router.put(
   ]),
   updateUser
 );
+
+router.delete(
+  "/deleteUser/:id",
+  deleteUser
+)
 
 module.exports = router;
