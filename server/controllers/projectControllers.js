@@ -9,56 +9,44 @@ const addProject = async (req, res) => {
       githubLink,
       liveLink,
       featured,
-      order,
+      order
     } = req.body;
 
-    const image = req.file ? req.file.path : null;
-
-    // ✅ Validation (correct way)
-    if (!title || !description || !techStack || !githubLink || !liveLink) {
+    // ✅ Basic validation
+    if (!title || !description) {
       return res.status(400).json({
         success: false,
-        message: "Required fields are missing",
+        message: "Title and description are required"
       });
     }
 
-    // ✅ Check duplicate
-    const isProjectExist = await Project.findOne({ githubLink });
-    if (isProjectExist) {
-      return res.status(409).json({
-        success: false,
-        message: "Project already exists",
-      });
-    }
-
-    // ✅ Convert techStack safely
-    const parsedTechStack = Array.isArray(techStack)
-      ? techStack
-      : techStack.split(",").map((t) => t.trim());
+    // ✅ Get logged-in user from token middleware
+    const userId = req.user.id;
 
     // ✅ Create project
     const newProject = await Project.create({
       title,
       description,
-      techStack: parsedTechStack,
-      image,
+      techStack,
       githubLink,
       liveLink,
-      featured: featured ?? false,
-      order: order ?? 0,
-      user: req.user?._id, // requires auth middleware
+      featured,
+      order,
+      image: req.file ? req.file.path : "", // if using multer
+      user: userId
     });
 
     return res.status(201).json({
       success: true,
-      message: "Project created successfully",
-      data: newProject,
+      message: "Project added successfully",
+      data: newProject
     });
 
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Error adding project",
+      error: error.message
     });
   }
 };

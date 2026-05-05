@@ -24,6 +24,9 @@ app.use("/api/users", users);
 const auth=require("./routes/authRoutes")
 app.use("/api/auth",auth)
 
+const project=require("./routes/projectRoutes")
+app.use("/api/project",project)
+
 // Health check
 app.get("/", (_req, res) => {
   res.json({ message: "Server is running" });
