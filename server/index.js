@@ -21,6 +21,9 @@ app.use("/uploads", express.static("uploads"));
 const users = require("./routes/userRoutes");
 app.use("/api/users", users);
 
+const auth=require("./routes/authRoutes")
+app.use("/api/auth",auth)
+
 // Health check
 app.get("/", (_req, res) => {
   res.json({ message: "Server is running" });
