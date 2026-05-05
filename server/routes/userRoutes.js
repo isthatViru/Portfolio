@@ -1,15 +1,20 @@
 const express = require("express");
 const router = express.Router();
 
-const { addUser, getuser,updateUser,deleteUser } = require("../controllers/userControllers");
+const verifyToken = require("../middleware/authMiddleware");
+const verifyRoles = require("../middleware/verifyRoles");
+
+const { addUser, getuser, updateUser, deleteUser } = require("../controllers/userControllers");
 const upload = require("../middleware/upload");
 
-// Get users
-router.get("/getUser", getuser);
 
-// Add user with files
+router.get("/getUser", verifyToken, verifyRoles("admin"), getuser);
+
+
 router.post(
   "/addUser",
+  verifyToken,
+  verifyRoles("admin"),
   upload.fields([
     { name: "resume", maxCount: 1 },
     { name: "profilePic", maxCount: 1 }
@@ -17,8 +22,10 @@ router.post(
   addUser
 );
 
+
 router.put(
   "/updateUser/:id",
+  verifyToken,
   upload.fields([
     { name: "resume", maxCount: 1 },
     { name: "profilePic", maxCount: 1 }
@@ -26,9 +33,12 @@ router.put(
   updateUser
 );
 
+
 router.delete(
   "/deleteUser/:id",
+  verifyToken,
+  verifyRoles("admin"),
   deleteUser
-)
+);
 
 module.exports = router;
