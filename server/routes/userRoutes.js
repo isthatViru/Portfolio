@@ -9,7 +9,7 @@ const upload = require("../middleware/upload");
 
 
 router.get("/getUser", verifyToken, verifyRoles("admin"), getuser);
-
+router.get("/getUser/:id", verifyToken, getOneUser);
 
 router.post(
   "/addUser",

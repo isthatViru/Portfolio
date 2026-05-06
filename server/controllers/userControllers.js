@@ -29,6 +29,43 @@ const getuser = async (req, res) => {
   }
 };
 
+const getOneUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    // ✅ Check id exists
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+      });
+    }
+
+    // ✅ Find user
+    const user = await User.findById(id).select("-password");
+
+    // ✅ User not found
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // ✅ Success response
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // Add user
 const addUser = async (req, res) => {
   try {
@@ -201,4 +238,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getuser, addUser ,updateUser,deleteUser};
+module.exports = { getuser,getOneUser, addUser ,updateUser,deleteUser};
