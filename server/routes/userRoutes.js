@@ -4,7 +4,7 @@ const router = express.Router();
 const verifyToken = require("../middleware/authMiddleware");
 const verifyRoles = require("../middleware/verifyRoles");
 
-const { addUser, getuser, updateUser, deleteUser } = require("../controllers/userControllers");
+const { addUser, getuser,getOneUser ,updateUser, deleteUser } = require("../controllers/userControllers");
 const upload = require("../middleware/upload");
 
 

@@ -51,4 +51,69 @@ const addProject = async (req, res) => {
   }
 };
 
-module.exports = { addProject };
+const getAllProjects=async(req,res)=>{
+ try {
+  const projects=await Project.find()
+  .populate("user", "name email")
+  .sort({order:1,createdAt:-1})
+
+  return res.status(200).json({
+    success:true,
+    count:Project.length,
+    data:projects
+  })
+
+ } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching projects",
+      error: error.message
+    });
+ }
+}
+
+const getSingleProject=async(req,res)=>{
+  try {
+    const project=await Project.findById(req.params.id)
+    .populate("user","name email")
+    if(!project){
+      return res.status(404).json({
+        success:false,
+        message:"Project not found"
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      message:"Project found",
+      data:project
+    })
+  } catch (error) {
+      return res.status(500).json({
+      success: false,
+      message: "Error fetching project",
+      error: error.message
+    });
+  }
+}
+const getMyProjects = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const projects = await Project.find({ user: userId })
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: projects.length,
+      data: projects
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching user projects",
+      error: error.message
+    });
+  }
+};
+module.exports = { addProject ,getAllProjects,getSingleProject,getMyProjects };
