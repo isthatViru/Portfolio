@@ -27,6 +27,9 @@ app.use("/api/auth",auth)
 const project=require("./routes/projectRoutes")
 app.use("/api/project",project)
 
+const skills=require('./routes/skillRoutes')
+app.use('/api/skills',skills)
+
 // Health check
 app.get("/", (_req, res) => {
   res.json({ message: "Server is running" });
