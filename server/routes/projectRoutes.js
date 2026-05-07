@@ -1,43 +1,71 @@
 const express = require("express");
 const router = express.Router();
 
-const { addProject, getAllProjects, getSingleProject, getMyProjects, updateProject, deleteProject } = require("../controllers/projectControllers");
+const {
+  addProject,
+  getAllProjects,
+  getSingleProject,
+  getMyProjects,
+  updateProject,
+  deleteProject,
+  getMySingleProject,
+} = require("../controllers/projectControllers");
+
 const verifyToken = require("../middleware/authMiddleware");
-const verifyRoles = require("../middleware/verifyRoles");
-const upload = require("../middleware/upload"); // if using multer
+const upload = require("../middleware/upload");
 
+
+// ✅ Create Project
 router.post(
-  "/addProject",
+  "/",
   verifyToken,
-
-  upload.single("image"), // optional
+  upload.single("image"),
   addProject
 );
 
+
+// ✅ Get All Projects
 router.get(
-  "/project",
+  "/",
   getAllProjects
-)
+);
 
-router.get(
-  "/project/:id",
-  getSingleProject
-)
 
+// ✅ Get Logged-in User Projects
 router.get(
-  "/myProjects",
+  "/me",
   verifyToken,
   getMyProjects
-)
+);
 
-router.put(
-  "/updateProject/:id",
+
+// ✅ Get Single Logged-in User Project
+router.get(
+  "/me/:id",
   verifyToken,
-  updateProject
-)
+  getMySingleProject
+);
 
+
+// ✅ Get Single Project
+router.get(
+  "/:id",
+  getSingleProject
+);
+
+
+// ✅ Update Project
+router.put(
+  "/:id",
+  verifyToken,
+  upload.single("image"),
+  updateProject
+);
+
+
+// ✅ Delete Project
 router.delete(
-  "/deleteProject/:id",
+  "/:id",
   verifyToken,
   deleteProject
 );
